@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.security.spec.RSAOtherPrimeInfo;
 
 public class NetworkingServer{
     public static void main(String[]args){
@@ -26,9 +27,32 @@ public class NetworkingServer{
                 String clienthost= client.getInetAddress().getHostAddress();
                 int clientport = client.getPort();
                 System.out.println("client host = "+clienthost +"Client port ="+clientport);
-                InputStream clientIn=
+                InputStream clientIn= client.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(clientIn));
+                        String msgFromClient =br.readLine();
+                System.out.println("Message received from client="+msgFromClient);
+                if(msgFromClient !=null&&!msgFromClient.equalsIgnoreCase("bye")) {
+                    OutputStream clientOut = client.getOutputStream();
+                    PrintWriter pw = new PrintWriter(clientOut, true);
+                    String ansMsg = "Hello," + msgFromClient;
+                    pw.println(ansMsg);
 
 
+                }
+                if(msgFromClient!=null&&msgFromClient.equalsIgnoreCase("bye"))
+                {
+                    server.close();
+                    client.close();
+                    break;
+
+                }
+
+
+
+
+
+            }catch(IOException ie){
+                System.out.println("banan");
             }
         }
     }
